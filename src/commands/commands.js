@@ -51,6 +51,8 @@ function onMessageSendHandler(event) {
 
     console.log("Recipient " + result.value);
 
+    event.completed({ allowEvent: false, errorMessage: "Recipient " + result.value });
+
    /* if (containsLegalTeamMember(result.value)) {
       ensureHighlyConfidentialLabelSet(event);
     } else {
