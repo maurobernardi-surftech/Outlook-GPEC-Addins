@@ -40,7 +40,7 @@ const PEC_SUFFIX = "gpec*@marr.it";
  */
 function onMessageSendHandler(event) {
   
-  console.log("Version 01");
+  console.log("Version 02");
 
   Office.context.mailbox.item.from.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
@@ -254,6 +254,8 @@ function getLabelId(sensitivityLabel, sensitivityLabelCatalog) {
  * @returns {boolean} Returns true if a member of the legal team is a recipient.
  */
 function containsPecSender(recipients) {
+  console.log("recipients");
+  console.log(recipients);
   for (let i = 0; i < recipients.length; i++) {
     console.log(`Error: ${result.error.message}`);
 
