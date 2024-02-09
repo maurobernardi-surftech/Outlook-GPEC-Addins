@@ -40,7 +40,9 @@ const PEC_SUFFIX = "gpec@marr.it";
  */
 function onMessageSendHandler(event) {
 
-  Office.context.mailbox.item.to.getAsync({ asyncContext: event }, (result) => {
+  event.completed({ allowEvent: false, errorMessage:  "Test" });
+
+ /* Office.context.mailbox.item.to.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
     if (result.status === Office.AsyncResultStatus.Failed) {
       console.log("Unable to get the recipients from the To field.");
@@ -51,14 +53,14 @@ function onMessageSendHandler(event) {
 
     //console.log("Recipient " + result.value);
 
-    event.completed({ allowEvent: false, errorMessage:  result.value });
+    event.completed({ allowEvent: false, errorMessage:  "Test" });
 
    /* if (containsLegalTeamMember(result.value)) {
       ensureHighlyConfidentialLabelSet(event);
     } else {
 
     }*/
-  });
+  });*/
 }
 
 
