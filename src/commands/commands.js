@@ -40,29 +40,21 @@ const PEC_SUFFIX = "gpec@marr.it";
  */
 function onMessageSendHandler(event) {
 
-  event.completed({ allowEvent: false, errorMessage:  "Test" });
-
-  /*
-  Office.context.mailbox.item.to.getAsync({ asyncContext: event }, (result) => {
+  Office.context.mailbox.item.from.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
     if (result.status === Office.AsyncResultStatus.Failed) {
-      console.log("Unable to get the recipients from the To field.");
+      console.log("Unable to get the Sender from the From field.");
       console.log(`Error: ${result.error.message}`);
       event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the To field. Save your message, then restart Outlook." });
       return;
     }
 
-    //console.log("Recipient " + result.value);
-
-    event.completed({ allowEvent: false, errorMessage:  "Test" });
-
-    if (containsLegalTeamMember(result.value)) {
-      ensureHighlyConfidentialLabelSet(event);
+    if (containsPecSender(result.value)) {
+      event.completed({ allowEvent: false, errorMessage:  "OK" });
     } else {
-
+      event.completed({ allowEvent: false, errorMessage:  "KO" });
     }
   });
-  */
 }
 
 
@@ -259,7 +251,7 @@ function getLabelId(sensitivityLabel, sensitivityLabelCatalog) {
  * @param {Office.EmailAddressDetails[]} recipients The recipients in the To, Cc, or Bcc field.
  * @returns {boolean} Returns true if a member of the legal team is a recipient.
  */
-function containsLegalTeamMember(recipients) {
+function containsPecSender(recipients) {
   for (let i = 0; i < recipients.length; i++) {
     const emailAddress = recipients[i].emailAddress.toLowerCase();
     if (emailAddress.includes(PEC_SUFFIX)) {
