@@ -29,7 +29,7 @@ const LEGAL_HOLD_ACCOUNT = "gpec@marr.it";
  * @constant
  * @type {string}
  */
-const PEC_SUFFIX = "gpec@marr.it";
+const PEC_SUFFIX = "gpec*@marr.it";
 
 
 /**
@@ -39,13 +39,13 @@ const PEC_SUFFIX = "gpec@marr.it";
  * @param {Office.AddinCommands.Event} event The OnMessageSend event object. 
  */
 function onMessageSendHandler(event) {
-
+  alert('ppp');
   Office.context.mailbox.item.from.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
     if (result.status === Office.AsyncResultStatus.Failed) {
       console.log("Unable to get the Sender from the From field.");
       console.log(`Error: ${result.error.message}`);
-      event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the To field. Save your message, then restart Outlook." });
+      event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the From field. Save your message, then restart Outlook." });
       return;
     }
 
