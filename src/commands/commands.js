@@ -40,12 +40,6 @@ const PEC_SUFFIX = "gpec*@marr.it";
  */
 function onMessageSendHandler(event) {
   
-  Office.context.mailbox.item.body.setAsync(
-    '<a id="LPNoLP" href="http://www.marr.it">Click here!</a>',
-    {coercionType: Office.CoercionType.Html});
-
-
-
   Office.context.mailbox.item.from.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
     if (result.status === Office.AsyncResultStatus.Failed) {
