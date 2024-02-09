@@ -40,6 +40,8 @@ const PEC_SUFFIX = "gpec*@marr.it";
  */
 function onMessageSendHandler(event) {
   
+  console.log("Version 01");
+
   Office.context.mailbox.item.from.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
     if (result.status === Office.AsyncResultStatus.Failed) {
@@ -49,12 +51,11 @@ function onMessageSendHandler(event) {
       return;
     }
 
-//    if (containsPecSender(result.value)) {
-//    if (true) {
+    if (containsPecSender(result.value)) {
         event.completed({ allowEvent: false, errorMessage:  "OK" });
- //   } else {
- //     event.completed({ allowEvent: false, errorMessage:  "KO" });
- //   }
+    } else {
+      event.completed({ allowEvent: false, errorMessage:  "KO" });
+    }
   });
 }
 
