@@ -51,7 +51,7 @@ function onMessageSendHandler(event) {
 
 //    if (containsPecSender(result.value)) {
 //    if (true) {
- //       event.completed({ allowEvent: false, errorMessage:  "OK" });
+        event.completed({ allowEvent: false, errorMessage:  "OK" });
  //   } else {
  //     event.completed({ allowEvent: false, errorMessage:  "KO" });
  //   }
