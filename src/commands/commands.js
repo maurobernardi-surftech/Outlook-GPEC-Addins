@@ -255,6 +255,8 @@ function getLabelId(sensitivityLabel, sensitivityLabelCatalog) {
  */
 function containsPecSender(recipients) {
   for (let i = 0; i < recipients.length; i++) {
+    console.log(`Error: ${result.error.message}`);
+
     const emailAddress = recipients[i].emailAddress.toLowerCase();
     if (emailAddress.includes(PEC_SUFFIX)) {
       return true;
