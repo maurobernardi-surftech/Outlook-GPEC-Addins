@@ -49,8 +49,9 @@ function onMessageSendHandler(event) {
       return;
     }
 
-    if (containsPecSender(result.value)) {
-      event.completed({ allowEvent: false, errorMessage:  "OK" });
+//    if (containsPecSender(result.value)) {
+    if (true) {
+        event.completed({ allowEvent: false, errorMessage:  "OK" });
     } else {
       event.completed({ allowEvent: false, errorMessage:  "KO" });
     }
