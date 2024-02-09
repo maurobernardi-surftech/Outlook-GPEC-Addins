@@ -12,9 +12,7 @@ Office.onReady((info) => {
    * This ensures support in Outlook on Windows. 
    */
   if (Office.context.platform === Office.PlatformType.PC || Office.context.platform == null) {
-    Office.actions.associate("onMessageRecipientsChangedHandler", onMessageRecipientsChangedHandler);
     Office.actions.associate("onMessageSendHandler", onMessageSendHandler);
-    Office.actions.associate("onSensitivityLabelChangedHandler", onSensitivityLabelChangedHandler);
   }
 });
 
@@ -24,35 +22,15 @@ Office.onReady((info) => {
  * @constant
  * @type {string}
  */
-const LEGAL_HOLD_ACCOUNT = "legalhold@fabrikam.com";
+const LEGAL_HOLD_ACCOUNT = "gpec@marr.it";
 
 /**
  * The email address suffix that identifies an account owned by a legal team member at Fabrikam.
  * @constant
  * @type {string}
  */
-const LEGAL_TEAM_ACCOUNT_SUFFIX = "-legal@fabrikam.com";
+const PEC_SUFFIX = "gpec@marr.it";
 
-/**
- * Handle the OnMessageRecipientsChanged event by checking whether the legal hold email account was added to the
- * To, Cc, or Bcc field of a message. If the account was added to the To or Cc field, the account is removed.
- * If the account was added to the Bcc field, it's only removed if the sensitivity label of a message isn't set to
- * Highly Confidential.
- * @param {Office.AddinCommands.Event} event The OnMessageRecipientsChanged event object.
- */
-function onMessageRecipientsChangedHandler(event) {
-  if (event.changedRecipientFields.to) {
-    removeLegalHoldAccount(event, Office.context.mailbox.item.to);
-  }
-
-  if (event.changedRecipientFields.cc) {
-    removeLegalHoldAccount(event, Office.context.mailbox.item.cc);
-  }
-
-  if (event.changedRecipientFields.bcc) {
-    checkForLegalHoldAccount(event);
-  }
-}
 
 /**
  * Handle the OnMessageSend event by checking whether the current message has an attachment or a recipient is a member
@@ -61,76 +39,26 @@ function onMessageRecipientsChangedHandler(event) {
  * @param {Office.AddinCommands.Event} event The OnMessageSend event object. 
  */
 function onMessageSendHandler(event) {
-  Office.context.mailbox.item.getAttachmentsAsync({ asyncContext: event }, (result) => {
+
+  Office.context.mailbox.item.to.getAsync({ asyncContext: event }, (result) => {
     const event = result.asyncContext;
     if (result.status === Office.AsyncResultStatus.Failed) {
-      console.log("Unable to check for attachments.");
+      console.log("Unable to get the recipients from the To field.");
       console.log(`Error: ${result.error.message}`);
-      event.completed({ allowEvent: false, errorMessage: "Unable to check the message for attachments. Save your message, then restart Outlook." });
+      event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the To field. Save your message, then restart Outlook." });
       return;
     }
 
-    const attachments = result.value;
-    if (attachments.length > 0 ) {
+    console.log("Recipient " + result.value);
+
+    if (containsLegalTeamMember(result.value)) {
       ensureHighlyConfidentialLabelSet(event);
     } else {
-      Office.context.mailbox.item.to.getAsync({ asyncContext: event }, (result) => {
-        const event = result.asyncContext;
-        if (result.status === Office.AsyncResultStatus.Failed) {
-          console.log("Unable to get the recipients from the To field.");
-          console.log(`Error: ${result.error.message}`);
-          event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the To field. Save your message, then restart Outlook." });
-          return;
-        }
 
-        if (containsLegalTeamMember(result.value)) {
-          ensureHighlyConfidentialLabelSet(event);
-        } else {
-          Office.context.mailbox.item.bcc.getAsync({ asyncContext: event }, (result) => {
-            const event = result.asyncContext;
-            if (result.status === Office.AsyncResultStatus.Failed) {
-              console.log("Unable to get the recipients from the Bcc field.");
-              console.log(`Error: ${result.error.message}`);
-              event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the Bcc field. Save your message, then restart Outlook." });
-              return;
-            }
-
-            if (containsLegalTeamMember(result.value)) {
-              ensureHighlyConfidentialLabelSet(event);
-            } else {
-              Office.context.mailbox.item.cc.getAsync({ asyncContext: event }, (result) => {
-                const event = result.asyncContext;
-                if (result.status === Office.AsyncResultStatus.Failed) {
-                  console.log("Unable to get the recipients from the Cc field.");
-                  console.log(`Error: ${result.error.message}`);
-                  event.completed({ allowEvent: false, errorMessage: "Unable to get the recipients from the Cc field. Save your message, then restart Outlook." });
-                  return;
-                }
-
-                if (containsLegalTeamMember(result.value)) {
-                  ensureHighlyConfidentialLabelSet(event);
-                } else {
-                  event.completed({ allowEvent: true });
-                }
-              });
-            }
-          });
-        }
-      });
     }
   });
 }
 
-/**
- * Handle the OnSensitivityLabelChanged event by verifying that the legal hold email account is added to the
- * Bcc field if the sensitivity label of the message is set to Highly Confidential. If the sensitivity label
- * isn't set to Highly Confidential, the event handler removes the legal hold email account from the message,
- * if it's present.
- * @param {Office.AddinCommands.Event} event The OnSensitivityLabelChanged event object.
- */
-function onSensitivityLabelChangedHandler(event) {
-  checkForLegalHoldAccount(event);
-}
 
 /**
  * Check that the Highly Confidential sensitivity label is set if a message contains an attachment or a recipient
@@ -321,14 +249,14 @@ function getLabelId(sensitivityLabel, sensitivityLabelCatalog) {
 }
 
 /**
- * Check if a member of the legal team is a recipient in the To, Cc, or Bcc field.
+ * Check if a member of the PEC team is a recipient in the To, Cc, or Bcc field.
  * @param {Office.EmailAddressDetails[]} recipients The recipients in the To, Cc, or Bcc field.
  * @returns {boolean} Returns true if a member of the legal team is a recipient.
  */
 function containsLegalTeamMember(recipients) {
   for (let i = 0; i < recipients.length; i++) {
     const emailAddress = recipients[i].emailAddress.toLowerCase();
-    if (emailAddress.includes(LEGAL_TEAM_ACCOUNT_SUFFIX)) {
+    if (emailAddress.includes(PEC_SUFFIX)) {
       return true;
     }
   }

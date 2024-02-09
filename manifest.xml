@@ -2,10 +2,10 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:mailappor="http://schemas.microsoft.com/office/mailappversionoverrides/1.0" xsi:type="MailApp">
   <Id>f9abed2a-5bf7-42ad-8ff7-65711751b50a</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Fabrikam</ProviderName>
+  <ProviderName>Marr</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
-  <DisplayName DefaultValue="Office Add-ins Outlook sensitivity label sample"/>
-  <Description DefaultValue="Verify the sensitivity label of a message in an event-based add-in."/>
+  <DisplayName DefaultValue="Marr GPEC Project"/>
+  <Description DefaultValue="Send PEC with GPEC."/>
   <IconUrl DefaultValue="https://github.com/maurobernardi-surftech/Outlook-GPEC-Addins/assets/icon-64.png"/>
   <HighResolutionIconUrl DefaultValue="https://github.com/maurobernardi-surftech/Outlook-GPEC-Addins/assets/icon-128.png"/>
   <SupportUrl DefaultValue="https://www.marr.it/help"/>
@@ -77,9 +77,7 @@
             <!-- Configures the add-in to launch when the specified events occur. -->
             <ExtensionPoint xsi:type="LaunchEvent">
               <LaunchEvents>
-                <LaunchEvent Type="OnMessageRecipientsChanged" FunctionName="onMessageRecipientsChangedHandler"/>
                 <LaunchEvent Type="OnMessageSend" FunctionName="onMessageSendHandler" SendMode="PromptUser"/>
-                <LaunchEvent Type="OnSensitivityLabelChanged" FunctionName="onSensitivityLabelChangedHandler"/>
               </LaunchEvents>
               <!-- Identifies the runtime to be used by the add-in (also referenced by the Runtime element). -->
               <SourceLocation resid="WebViewRuntime.Url" />
