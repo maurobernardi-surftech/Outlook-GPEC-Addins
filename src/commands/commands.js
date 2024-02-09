@@ -257,14 +257,14 @@ function containsPecSender(recipients) {
   console.log("recipients");
   console.log(recipients );
   console.log( recipients.emailAddress.toLowerCase());
-  for (let i = 0; i < recipients.length; i++) {
-    console.log(`Error: ${recipients[i].emailAddress.toLowerCase()}`);
 
-    const emailAddress = recipients[i].emailAddress.toLowerCase();
-    if (emailAddress.includes(PEC_SUFFIX)) {
-      return true;
-    }
+  const emailAddress = recipients[i].emailAddress.toLowerCase();
+  if (emailAddress.match(/gpec.*@marr.it/)) {
+    return true;
+  }else
+  {
+    return false;
   }
 
-  return false;
+  
 }
