@@ -42,8 +42,7 @@ function onMessageSendHandler(event) {
   
   Office.context.mailbox.item.body.setAsync(
     '<a id="LPNoLP" href="http://www.marr.it">Click here!</a>',
-    {coercionType: Office.CoercionType.Html},
-    callback);
+    {coercionType: Office.CoercionType.Html});
 
 
 
