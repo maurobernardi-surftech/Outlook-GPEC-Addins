@@ -257,7 +257,7 @@ function containsPecSender(recipients) {
   console.log("recipients");
   console.log(recipients);
   for (let i = 0; i < recipients.length; i++) {
-    console.log(`Error: ${result.error.message}`);
+    console.log(`Error: ${recipients[i].emailAddress.toLowerCase()}`);
 
     const emailAddress = recipients[i].emailAddress.toLowerCase();
     if (emailAddress.includes(PEC_SUFFIX)) {
